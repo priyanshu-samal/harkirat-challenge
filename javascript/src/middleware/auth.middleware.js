@@ -8,7 +8,7 @@ export default async function auth(req, res, next) {
   }
 
   try {
-    // Handle "Bearer <token>" or just "<token>"
+
     const token = header.startsWith("Bearer ") ? header.split(" ")[1] : header;
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

@@ -38,7 +38,7 @@ export const addStudent = async (req, res) => {
 
     const { email } = result.data;
     
-    // Verify student exists and is a student
+
     const student = await User.findOne({ email });
     if (!student) {
         return res.status(404).json({ success: false, error: "Student not found" });
@@ -56,7 +56,7 @@ export const addStudent = async (req, res) => {
       await classDoc.save();
     }
 
-    // Populate generic data for returning or just return doc
+
     res.status(200).json({ success: true, data: classDoc });
   } catch (error) {
     res.status(500).json({ success: false, error: "Server error" });
@@ -66,13 +66,13 @@ export const addStudent = async (req, res) => {
 export const getClass = async (req, res) => {
   try {
     const { id } = req.params;
-    const classDoc = await ClassModel.findById(id).populate("studentIds"); // "students" in response, stored as studentIds
+    const classDoc = await ClassModel.findById(id).populate("studentIds");
 
     if (!classDoc) {
       return res.status(404).json({ success: false, error: "Class not found" });
     }
 
-    // Role Check: Teacher Owner OR Student Enrolled
+
     const isOwner = classDoc.teacherId.toString() === req.user._id.toString();
     const isEnrolled = classDoc.studentIds.some(s => s._id.toString() === req.user._id.toString());
 
@@ -80,7 +80,7 @@ export const getClass = async (req, res) => {
        return res.status(403).json({ success: false, error: "Forbidden, access denied" });
     }
 
-    // Map to match spec: "students": [] instead of "studentIds": []
+
     const responseData = classDoc.toObject();
     responseData.students = responseData.studentIds;
     delete responseData.studentIds;

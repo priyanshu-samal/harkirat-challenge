@@ -3,10 +3,10 @@ if (!token) window.location.href = "/index.html";
 
 let currentUser = null;
 let ws = null;
-let currentClassStudents = []; // For teacher
+let currentClassStudents = [];
 let activeClassId = null;
 
-// DOM Elements
+
 const teacherControls = document.getElementById("teacher-controls");
 const studentControls = document.getElementById("student-controls");
 const sessionStats = document.getElementById("session-stats");
@@ -15,7 +15,7 @@ const studentList = document.getElementById("student-list");
 const sessionStatus = document.getElementById("session-status");
 const endSessionBtn = document.getElementById("end-session-btn");
 
-// Init
+
 async function init() {
   try {
     const res = await fetch("/api/auth/me", {
@@ -44,7 +44,7 @@ async function init() {
   }
 }
 
-// WebSocket
+
 function connectWS() {
   ws = new WebSocket(`ws://${location.host}/ws?token=${token}`);
 
@@ -53,7 +53,7 @@ function connectWS() {
     sessionStatus.textContent = "Connected to Live Server";
     sessionStatus.style.color = "#03dac6";
     
-    // If student, check status immediately
+
     if (currentUser.role === "student") {
         ws.send(JSON.stringify({ event: "MY_ATTENDANCE" }));
     }
@@ -73,7 +73,6 @@ function connectWS() {
       resetSessionUI();
     } else if (eventName === "ERROR") {
       console.error("WS Error:", data.message);
-      // alert(data.message); // Optional
     }
   };
 
@@ -83,7 +82,7 @@ function connectWS() {
   };
 }
 
-// Logic
+
 function handleAttendanceMarked({ studentId, status }) {
   if (currentUser.role === "teacher") {
     const item = document.getElementById(`student-${studentId}`);
@@ -92,10 +91,7 @@ function handleAttendanceMarked({ studentId, status }) {
         badge.className = `status-badge status-${status}`;
         badge.textContent = status;
     }
-    // Update stats locally or request summary? 
-    // Teacher should request summary to keep sync? 
-    // Or server sends summary automatically? Spec says "Event 2: TODAY_SUMMARY... Teacher Sends... Broadcast".
-    // So we should trigger summary update after marking.
+
     ws.send(JSON.stringify({ event: "TODAY_SUMMARY" }));
   } else if (currentUser.role === "student" && currentUser._id === studentId) {
       updateMyStatus({ status });
@@ -126,7 +122,7 @@ function resetSessionUI() {
     }
 }
 
-// Teacher Actions
+
 if (document.getElementById("create-class-btn")) {
     document.getElementById("create-class-btn").addEventListener("click", async () => {
         const name = document.getElementById("new-class-name").value;
@@ -152,7 +148,7 @@ if (document.getElementById("start-session-btn")) {
         const classId = document.getElementById("class-id-input").value;
         if (!classId) return alert("Enter Class ID");
 
-        // 1. Fetch Students
+
         const resStats = await fetch(`/api/class/${classId}`, {
              headers: { "Authorization": token }
         });
@@ -163,7 +159,7 @@ if (document.getElementById("start-session-btn")) {
         currentClassStudents = dStats.data.students;
         renderStudentList();
 
-        // 2. Start Session (HTTP)
+
         const resStart = await fetch("/api/attendance/start", {
             method: "POST",
              headers: { "Content-Type": "application/json", "Authorization": token },
@@ -176,7 +172,7 @@ if (document.getElementById("start-session-btn")) {
             document.getElementById("start-session-btn").classList.add("hidden");
             endSessionBtn.classList.remove("hidden");
             sessionStats.classList.remove("hidden");
-            // Initial Summary
+
             ws.send(JSON.stringify({ event: "TODAY_SUMMARY" }));
         } else {
             alert(dStart.error);
@@ -200,14 +196,14 @@ if (document.getElementById("add-student-btn")) {
         const res = await fetch(`/api/class/${classId}/add-student`, {
              method: "POST",
              headers: { "Content-Type": "application/json", "Authorization": token },
-             body: JSON.stringify({ email: studentId }) // studentId variable holds email input value now
+             body: JSON.stringify({ email: studentId })
         });
         const d = await res.json();
         if (d.success) {
             alert("Student added!");
-            // Determine if we need to refresh list
+
             if (activeClassId === classId) {
-                // Ideally refresh list
+
                 const sRes = await fetch(`/api/class/${classId}`, { headers: { "Authorization": token } });
                 const sData = await sRes.json();
                 if (sData.success) {
@@ -238,7 +234,7 @@ function renderStudentList() {
     });
 }
 
-// Global function for onclick
+
 window.mark = (studentId, status) => {
     ws.send(JSON.stringify({
         event: "ATTENDANCE_MARKED",
@@ -251,7 +247,7 @@ document.getElementById("logout-btn").addEventListener("click", () => {
     window.location.href = "/index.html";
 });
 
-// Student Actions
+
 if (document.getElementById("refresh-status-btn")) {
     document.getElementById("refresh-status-btn").addEventListener("click", () => {
          ws.send(JSON.stringify({ event: "MY_ATTENDANCE" }));

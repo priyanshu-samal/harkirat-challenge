@@ -8,7 +8,7 @@ export const setupWebSocket = (server) => {
   const wss = new WebSocketServer({ server, path: "/ws" });
 
   wss.on("connection", async (ws, req) => {
-    // 1. Auth via query param
+
     const url = new URL(req.url, `http://${req.headers.host}`);
     const token = url.searchParams.get("token");
 
@@ -53,7 +53,7 @@ export const setupWebSocket = (server) => {
 
 const broadcast = (wss, message) => {
   wss.clients.forEach((client) => {
-    if (client.readyState === 1) { // WebSocket.OPEN
+    if (client.readyState === 1) {
       client.send(JSON.stringify(message));
     }
   });
@@ -71,10 +71,10 @@ const handleAttendanceMarked = (ws, data, wss) => {
   const { studentId, status } = data;
   if (!studentId || !status) return;
 
-  // Update memory
+
   state.activeSession.attendance[studentId] = status;
 
-  // Broadcast
+
   broadcast(wss, {
     event: "ATTENDANCE_MARKED",
     data: { studentId, status },
@@ -129,14 +129,7 @@ const handleDone = async (ws, wss) => {
 
   const { classId, attendance } = state.activeSession;
 
-  // 1. Get all students in the class
-  // We need to import ClassModel to find students who were NOT marked and default them to absent?
-  // Spec says: "Mark absent students in memory" (step 3 of DONE)
-  // This implies we need to know who belongs to the class.
-  // Let's import ClassModel.
-  
-  // Dynamic import or top level? Top level is fine.
-  // Waiting for ClassModel implementation details... imported it below.
+
   const ClassModel = (await import("../models/class.model.js")).default;
   
   const classDoc = await ClassModel.findById(classId);
@@ -144,7 +137,7 @@ const handleDone = async (ws, wss) => {
       return ws.send(JSON.stringify({ event: "ERROR", data: { message: "Class not found" } }));
   }
 
-  // Mark unmarked students as absent
+
   classDoc.studentIds.forEach(studentIdObj => {
       const sId = studentIdObj.toString();
       if (!attendance[sId]) {
@@ -152,7 +145,7 @@ const handleDone = async (ws, wss) => {
       }
   });
 
-  // Persist to DB
+
   const operations = Object.entries(attendance).map(([studentId, status]) => ({
       insertOne: {
           document: {
@@ -167,15 +160,15 @@ const handleDone = async (ws, wss) => {
       await AttendanceModel.bulkWrite(operations);
   }
 
-  // Calc final summary
+
   const total = Object.keys(attendance).length;
   const present = Object.values(attendance).filter((s) => s === "present").length;
   const absent = total - present;
 
-  // Clear memory
+
   resetSession();
 
-  // Broadcast
+
   broadcast(wss, {
     event: "DONE",
     data: {

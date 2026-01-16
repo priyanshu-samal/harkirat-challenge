@@ -16,8 +16,8 @@ export const isStudent = (req, res, next) => {
 
 export const isClassOwner = async (req, res, next) => {
   try {
-    const { id } = req.params; // Class ID from route params
-    const classId = req.body.classId || id; // Handle both body and params
+    const { id } = req.params;
+    const classId = req.body.classId || id;
 
     if (!classId) {
        return res.status(400).json({ success: false, error: "Class ID required" });
@@ -33,7 +33,7 @@ export const isClassOwner = async (req, res, next) => {
        return res.status(403).json({ success: false, error: "Forbidden, not class teacher" });
     }
 
-    req.class = classDoc; // Attach class to request for convenience
+    req.class = classDoc;
     next();
   } catch (error) {
     res.status(500).json({ success: false, error: "Internal Server Error" });

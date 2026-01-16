@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const showSignupBtn = document.getElementById("show-signup");
   const showLoginBtn = document.getElementById("show-login");
 
-  // Toggle Forms
+
   showSignupBtn.addEventListener("click", (e) => {
     e.preventDefault();
     loginCard.classList.add("hidden");
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loginCard.classList.remove("hidden");
   });
 
-  // Login Logic
+
   document.getElementById("login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = document.getElementById("login-email").value;
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Signup Logic
+
   document.getElementById("signup-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const name = document.getElementById("signup-name").value;
@@ -67,9 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (data.success) {
-        // Auto login or ask to login? Let's just switch to login view for simplicity or auto login if we had token.
-        // Signup response usually doesn't return token unless we implemented it that way. 
-        // My controller returns user data only. So ask to login.
+
         alert("Account created! Please login.");
         signupCard.classList.add("hidden");
         loginCard.classList.remove("hidden");

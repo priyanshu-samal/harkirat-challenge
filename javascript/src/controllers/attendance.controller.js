@@ -13,11 +13,7 @@ export const startAttendance = async (req, res) => {
       return res.status(400).json({ success: false, error: "Invalid request schema" });
     }
 
-    // Note: isClassOwner middleware should have been run before this to ensure ownership
-    // But passing classId in body means we need to verify it.
-    // If we use middleware on this route, we are good.
-    
-    // Init session in global state
+
     const session = startSession(result.data.classId);
 
     res.status(200).json({
@@ -34,10 +30,10 @@ export const startAttendance = async (req, res) => {
 
 export const getMyAttendance = async (req, res) => {
   try {
-     const { id } = req.params; // classId
+     const { id } = req.params;
      const userId = req.user._id;
 
-     // Check DB
+
      const record = await AttendanceModel.findOne({ classId: id, studentId: userId });
 
      if (record) {

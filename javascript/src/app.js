@@ -6,9 +6,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static("public")); // Serve static files
+app.use(express.static("public"));
 
-// Root route removed to let index.html be served
+
 
 
 

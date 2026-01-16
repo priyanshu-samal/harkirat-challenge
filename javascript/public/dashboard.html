@@ -19,11 +19,11 @@
         </header>
 
         <div id="dashboard-content" class="dashboard-grid">
-            <!-- Left Panel: Controls -->
+
             <div class="glass-card">
                 <h3 id="role-title">Dashboard</h3>
 
-                <!-- Teacher Controls -->
+
                 <div id="teacher-controls" class="hidden">
                     <h4>Class Management</h4>
                     <div style="margin-bottom: 1rem;">
@@ -40,13 +40,13 @@
 
                     <div style="margin-bottom: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
                         <h4>Add Student to Class</h4>
-                        <!-- We need to know class ID. Uses class-id-input value -->
+
                         <input type="email" id="student-id-input" placeholder="Student Email">
                         <button id="add-student-btn" class="secondary">Add Student</button>
                     </div>
                 </div>
 
-                <!-- Student Controls -->
+
                 <div id="student-controls" class="hidden">
                     <h4>My Status</h4>
                     <p>Current Class: <span id="student-class-id">None</span></p>
@@ -58,14 +58,14 @@
                 </div>
             </div>
 
-            <!-- Right Panel: Live View -->
+
             <div class="glass-card">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h3>Live Session</h3>
                     <span id="session-status" style="color: #888; font-size: 0.9rem;">Inactive</span>
                 </div>
 
-                <!-- Stats (Teacher Only mostly, but visible to all if broadcast?) -->
+
                 <div id="session-stats" class="hidden"
                     style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem;">
                     <div
@@ -87,15 +87,15 @@
                     </div>
                 </div>
 
-                <!-- Student List (Teacher View) -->
+
                 <div id="student-list-container" class="hidden">
                     <h4>Students</h4>
                     <ul id="student-list">
-                        <!-- List Items -->
+
                     </ul>
                 </div>
 
-                <!-- Message for Student -->
+
                 <div id="student-view-msg" class="hidden">
                     Waiting for teacher updates...
                 </div>
