@@ -7,13 +7,11 @@ const classSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
     teacherId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-
     studentIds: [
       {
         type: mongoose.Schema.Types.ObjectId,

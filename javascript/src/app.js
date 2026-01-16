@@ -1,16 +1,25 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import authRoutes from "./routes/routes.js";
+import routes from "./routes/routes.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.static("public")); // Serve static files
 
-app.get("/", (req, res) => {
-  res.send("Auth is running");
+// Root route removed to let index.html be served
+
+
+
+app.use("/api", routes);
+
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: "Route not found",
+  });
 });
-
-app.use("/api", authRoutes);
 
 export default app;

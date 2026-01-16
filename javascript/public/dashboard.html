@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Attendance - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2>Live Attendance</h2>
+            <div>
+                <span id="user-name" style="margin-right: 10px; color: #aaa;"></span>
+                <button id="logout-btn" class="secondary" style="width: auto; padding: 5px 15px;">Logout</button>
+            </div>
+        </header>
+
+        <div id="dashboard-content" class="dashboard-grid">
+            <!-- Left Panel: Controls -->
+            <div class="glass-card">
+                <h3 id="role-title">Dashboard</h3>
+
+                <!-- Teacher Controls -->
+                <div id="teacher-controls" class="hidden">
+                    <h4>Class Management</h4>
+                    <div style="margin-bottom: 1rem;">
+                        <input type="text" id="new-class-name" placeholder="Class Name">
+                        <button id="create-class-btn">Create Class</button>
+                    </div>
+
+                    <div style="margin-bottom: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                        <h4>Session Control</h4>
+                        <input type="text" id="class-id-input" placeholder="Enter Class ID">
+                        <button id="start-session-btn">Start Session</button>
+                        <button id="end-session-btn" class="secondary hidden">End Session (Save)</button>
+                    </div>
+
+                    <div style="margin-bottom: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                        <h4>Add Student to Class</h4>
+                        <!-- We need to know class ID. Uses class-id-input value -->
+                        <input type="text" id="student-id-input" placeholder="Student ID">
+                        <button id="add-student-btn" class="secondary">Add Student</button>
+                    </div>
+                </div>
+
+                <!-- Student Controls -->
+                <div id="student-controls" class="hidden">
+                    <h4>My Status</h4>
+                    <p>Current Class: <span id="student-class-id">None</span></p>
+                    <div id="student-status-badge" class="status-badge status-pending"
+                        style="display:inline-block; margin-top:10px;">
+                        Waiting...
+                    </div>
+                    <button id="refresh-status-btn" class="secondary" style="margin-top: 20px;">Check Status</button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Live View -->
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Live Session</h3>
+                    <span id="session-status" style="color: #888; font-size: 0.9rem;">Inactive</span>
+                </div>
+
+                <!-- Stats (Teacher Only mostly, but visible to all if broadcast?) -->
+                <div id="session-stats" class="hidden"
+                    style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem;">
+                    <div
+                        style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.8rem; color: #aaa;">Total</div>
+                        <div id="stat-total" style="font-size: 1.5rem; font-weight: bold;">0</div>
+                    </div>
+                    <div
+                        style="background: rgba(3, 218, 198, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.8rem; color: var(--secondary-color);">Present</div>
+                        <div id="stat-present"
+                            style="font-size: 1.5rem; font-weight: bold; color: var(--secondary-color);">0</div>
+                    </div>
+                    <div
+                        style="background: rgba(207, 102, 121, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.8rem; color: var(--error-color);">Absent</div>
+                        <div id="stat-absent" style="font-size: 1.5rem; font-weight: bold; color: var(--error-color);">0
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student List (Teacher View) -->
+                <div id="student-list-container" class="hidden">
+                    <h4>Students</h4>
+                    <ul id="student-list">
+                        <!-- List Items -->
+                    </ul>
+                </div>
+
+                <!-- Message for Student -->
+                <div id="student-view-msg" class="hidden">
+                    Waiting for teacher updates...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/client.js"></script>
+</body>
+
+</html>

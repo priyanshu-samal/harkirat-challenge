@@ -7,13 +7,11 @@ const attendanceSchema = new mongoose.Schema(
       ref: "Class",
       required: true,
     },
-
     studentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-
     status: {
       type: String,
       enum: ["present", "absent"],

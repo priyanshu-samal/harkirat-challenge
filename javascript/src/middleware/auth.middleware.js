@@ -1,14 +1,16 @@
 import jwt from "jsonwebtoken";
-import User from "../models/user.models.js";
+import User from "../models/user.model.js";
 
 export default async function auth(req, res, next) {
   const header = req.headers.authorization;
   if (!header) {
-    return res.status(401).json({ success: false, error: "Unauthorized" });
+    return res.status(401).json({ success: false, error: "Unauthorized, token missing or invalid" });
   }
 
   try {
-    const token = header.split(" ")[1];
+    // Handle "Bearer <token>" or just "<token>"
+    const token = header.startsWith("Bearer ") ? header.split(" ")[1] : header;
+    
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId).select("-password");
 
@@ -17,6 +19,6 @@ export default async function auth(req, res, next) {
     req.user = user;
     next();
   } catch {
-    return res.status(401).json({ success: false, error: "Unauthorized" });
+    return res.status(401).json({ success: false, error: "Unauthorized, token missing or invalid" });
   }
 }
