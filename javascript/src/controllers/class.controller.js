@@ -7,7 +7,7 @@ const createClassSchema = z.object({
 });
 
 const addStudentSchema = z.object({
-  studentId: z.string(),
+  email: z.string().email(),
 });
 
 export const createClass = async (req, res) => {
@@ -33,27 +33,30 @@ export const addStudent = async (req, res) => {
   try {
     const result = addStudentSchema.safeParse(req.body);
     if (!result.success) {
-      return res.status(400).json({ success: false, error: "Invalid request schema" });
+      return res.status(400).json({ success: false, error: "Invalid email format" });
     }
 
-    const { studentId } = result.data;
+    const { email } = result.data;
     
     // Verify student exists and is a student
-    const student = await User.findById(studentId);
+    const student = await User.findOne({ email });
     if (!student) {
-        return res.status(404).json({ success: false, error: "Student not found" }); // Or User not found
+        return res.status(404).json({ success: false, error: "Student not found" });
     }
     
-    // Optional: check if role is student, though spec doesn't strictly enforce this check here, it's good practice.
-    // Spec says: "Returns all users with role student" in GET /students, implying we only add students.
+    if (student.role !== "student") {
+         return res.status(400).json({ success: false, error: "User is not a student" });
+    }
 
     const classDoc = req.class; // Attached by isClassOwner middleware
+    const studentId = student._id;
     
     if (!classDoc.studentIds.includes(studentId)) {
       classDoc.studentIds.push(studentId);
       await classDoc.save();
     }
 
+    // Populate generic data for returning or just return doc
     res.status(200).json({ success: true, data: classDoc });
   } catch (error) {
     res.status(500).json({ success: false, error: "Server error" });

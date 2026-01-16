@@ -200,7 +200,7 @@ if (document.getElementById("add-student-btn")) {
         const res = await fetch(`/api/class/${classId}/add-student`, {
              method: "POST",
              headers: { "Content-Type": "application/json", "Authorization": token },
-             body: JSON.stringify({ studentId })
+             body: JSON.stringify({ email: studentId }) // studentId variable holds email input value now
         });
         const d = await res.json();
         if (d.success) {
