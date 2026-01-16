@@ -45,8 +45,9 @@ This project is a full-stack Live Attendance System designed to facilitate real-
    Ensure Node.js and MongoDB are installed on your machine.
 
 2. **Install Dependencies**
-   Navigate to the project directory and run:
+   Navigate to the project directory:
    ```bash
+   cd javascript
    npm install
    ```
 
