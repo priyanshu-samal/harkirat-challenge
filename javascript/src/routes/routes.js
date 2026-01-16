@@ -1,19 +1,10 @@
-import express from express
-import router from express.router
-import router from ("./routes/routes")
-import middleware from ("./middleware/middleware")
+import { Router } from "express";
+//import middleware from "../middleware/middleware.js";
 
+const router = Router();
 
+router.get("/test",(req, res) => {
+  res.json({ message: "Route working" });
+});
 
-
-
-
-
-
-
-
-
-
-module.exports= router
-
-
+export default router;
